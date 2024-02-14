@@ -1,7 +1,7 @@
 ---
 title: "HW 01 - Earthquakes"
-author: "Insert your name here"
-date: "Insert date here"
+author: "Nyla Williams"
+date: "1/22/2024"
 output: html_document
 ---
 
@@ -16,28 +16,56 @@ library(openintro)
 
 ### Exercise 1
 
-There are \_\_\_ earthquakes in the dataset.
+There are 123 earthquakes in the dataset.
 
 ### Exercise 2
 
-Remove this text, and add your answer for Exercise 2 here.
+Because there are 7 columns, there are 7 variables in the dataset
 
 ### Exercise 3
 
-Remove this text, and add your answer for Exercise 3 here.
+```{r}
+earthquakes %>%
+  count(region, sort = TRUE)
+```
 
 ### Exercise 4
 
-Remove this text, and add your answer for Exercise 4 here.
+There are 39 entries of earthquakes in the 20th century, however the most notable would be in Turkey, Iran, and China.
+```{r}
+
+earthquakes %>% 
+  group_by(area) %>%
+  count(region, sort = TRUE)
+
+
+```
+
+```{r}
+earthquakes %>% 
+  count(month, sort = TRUE)
+```
+
+```{r}
+earthquakes %>% 
+  count(month, sort = TRUE) %>% 
+  slice_max(n, n = 3) 
+```
+
+```{r}
+earthquakes %>% 
+  count(richter, sort = TRUE) %>% 
+  slice_max(n, n = 5) 
+```
 
 ### Exercise 5
 
-Remove this text, and add your answer for Exercise 5 here.
+I Believe in the context of the average magnitude being shown the graph, I dont believe there is a true relationship between the two variables in relation to the average, the data points seem to be all over the place. It seems to me that although taking the average of a certain dataset would be beneficial, however, a different set of variables should be used for this specific dataset to make more sense visually.Or maybe, a different question should be asked to be able to visualize the data better for a more clear story. 
 
 ### Exercise 6
 
-Remove this text, and add your answer for Exercise 6 here.
+Comparing the two, I can see that They are both visually difficult to read. The death toll is a strong variable to use, as well as the (richter) variable. Therefore it would be more appropriate to utilize the two variables I stated to give better context to the data set
 
 ### Exercise 7
 
-Remove this text, and add your answer for Exercise 7 here.
+Yes! I think it makes more sense for this specific dataset, though the (Year) could be useful in other datasets. With the two variables in the last graph, the graph right away is more coherent making it the correct graph to use to present one's findings. 
