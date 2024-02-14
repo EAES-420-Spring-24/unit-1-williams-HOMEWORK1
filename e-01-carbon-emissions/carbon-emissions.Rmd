@@ -1,0 +1,173 @@
+---
+title: "Global CO2 Emissions"
+author: "Gavin McNicol"
+date: "`r Sys.Date()`"
+output:
+  html_document: 
+    toc: yes
+    toc_float: yes
+---
+
+## Introduction
+
+How much carbon dioxide (CO2) do different countries emit, and how have their emissions changed over time?
+Answering these questions (at a high level) is the focus of this analysis. **In the process, you will try out visualizing data in R for the first time!**  
+
+*NOTE: For in-class **Exercises** such as this, you should make changes to code directly on this exercise Rmarkdown document. For **Labs** and **Homeworks**, you will only edit a separate `starter` file. More on that later...*
+
+### Packages
+
+The code chunk below labeled `load-packages` shows three packages we will use for this analysis:  
+
+1. **tidyverse** for data wrangling (manipulation)
+2. **scales** for data visualization
+3. **reactable** for interactive display of tabular data (tables)
+
+*Note: Packages are just pre-assembled collections of functions and objects (often data)*
+
+```{r load-packages, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(scales)
+library(reactable)
+```
+
+### Data
+
+The data we're using originally came from the [2020 Global Carbon Budget](https://doi.org/10.5194/essd-12-3269-2020) which is a product of the [Global Carbon Project](https://doi.org/10.18160/gcp-2020).
+
+The data format is an Excel file called `National_Carbon_Emissions_2020v1.0.xlsx`, which has already been added to this exercise folder.  
+
+**To get started, we need to import the data, make some changes to it, and then assign it (save it) as an object in our R environment.**
+
+The code chunk below does this for us. 
+
+```{r import-excel-data, message = F}
+emissions <- 
+  readxl::read_excel("National_Carbon_Emissions_2020v1.0.xlsx", sheet = "Territorial Emissions", skip = 11) %>% 
+  rename("year" = `...1`) %>% 
+  gather(key = "territory", value = "emissions", 2:234) %>% 
+  mutate(emissions = as.numeric(emissions))
+```
+
+Let's break down this code:
+
+-   the second line starting with `readxl` reads in the data, selects the correct tab `Territorial Emissions`, and removes 11 header rows in the Excel file that we don't need.
+-   the next line starting with `rename` changes the first column name to `year` from the uninformative column name `...1`.
+-   the third line starting with `gather` rearranges the country emission data for easier plotting.
+-   the final line starting with `mutate` converts the `emissions` data column to numerical values.
+-   in the first line starting with `emissions`, the symbol `<-` takes the output of all of these steps and assigns it (saves it) to a new object called `emissions`. 
+
+I don't expect you to understand all these details right now. By Spring Break you will be able to write a code chunk like this - no sweat! 😎
+
+## Territory Carbon Dioxide (CO2) Emissions
+
+### Creating your first exploratory visualization 
+
+Now that the data are available to us in the object `emissions`, let's create an *exploratory data visualization* that displays how the CO2 emissions of the **USA** have changed over time, and compare it to two other countries, the **United Kingdom** and **China**.
+
+Let's make the plot! There are two ways we can do this:
+
+**Knitting**: Try clicking the 🧶 *Knit* button at the top of this window. It will generate an html (webpage) output that shows the entire Exercise. Scroll down to this part of the document. Do you see the CO2 emissions figure? If you don't ask for help! 🙋
+
+Now come back to the underlying RStudio window (where you see the raw code). Are you back...? If so, let's try the second method:
+
+**Run Buttons**: You can also run code chunks from this RStudio window using the green play button ▶️ shown at the top-right of the chunk! Try it for the chunk below... 
+
+Did you see a red bar and error message appear? Don't worry, that's expected! Why did this happen? When you `Knit` 🧶 an .Rmd file, RStudio executes **every code chunk starting at the top**. That is why you generated an output document that contained this entire exercise! When you tried running the chunk below with the play button ▶, RStudio does not have the required information from the chunks above.  
+
+So what do you think is the solution? You have two options. To the left of the green play button ▶ there is downward facing arrow ⬇️, which will run all the chunks *before* the one you click on. This is the fastest option. Alternatively, you can scroll up to the top of this document and click the green play button ▶️ for each chunk in sequence. I do not recommend doing this manual clicking *unless you are trying to identify where a problem is arising in your code*. For now, just click the downward arrow ⬇️! 
+
+Now that you've run all the chunks, you can go ahead and click the green play button ▶️. Did it generate the figure as output? Take a moment to admire your first exploratory visualization!
+
+```{r plot-yearly-co2-emissions, fig.width=5, fig.height=3, message=FALSE}
+emissions %>%
+  filter(territory %in% c("USA", "United Kingdom", "China") &
+           year > 1979) %>%
+  ggplot(mapping = aes(x = year, y = emissions, color = territory)) +
+  geom_point(alpha = 0.4) +
+  geom_smooth(method = "loess", se = FALSE) +
+  labs(
+    title = "Emissions of Carbon Dioxide by Territory",
+    subtitle = "1980 to 2020",
+    y = expression("Emissions (Mt C y"^{-1}*")"),
+    x = "Year",
+    color = "Territory"
+  ) +
+  theme_classic()
+```
+
+### Warm-up: Editing of your first visualization
+
+We can change which countries are being plotted by changing the country names in the `filter()` function in the code chunk below.  
+
+Try changing one of the country names, then run the code chunk or Knit the document (either is fine)! *Note that the country name should be spelled and capitalized exactly the same way as it appears in the data.*  
+
+If you want to check the countries and their spelling, click the green play button ▶ for the *code chunk at the very end of this document* (Appendix) to output an interactive table of the countries in the `emissions` dataset.
+
+```{r edit-your-country, fig.width=5, fig.height=3, message=FALSE}
+emissions %>%
+  filter(territory %in% c("USA", "United Kingdom", "China") &
+           year > 1979) %>%
+  ggplot(mapping = aes(x = year, y = emissions, color = territory)) +
+  geom_point(alpha = 0.4) +
+  geom_smooth(method = "loess", se = FALSE) +
+  labs(
+    title = "Emissions of Carbon Dioxide by Territory",
+    subtitle = "1980 to 2020",
+    y = expression("Emissions (Mt C y"^{-1}*")"),
+    x = "Year",
+    color = "Territory"
+  ) +
+  theme_classic()
+```
+
+## Exercises
+
+OK, now that you understand the basics of editing and running chunks/knitting, try completing the following exercises, step by step! Remember to ask for help if you need it! 🙋
+
+Edit the code in the chunk below to:
+
+1.  Visualize an additional territory/territories of your choice.
+2.  Shorten the x-axis to only show years after 2009.
+3.  Update the plot subtitle to reflect the shorter time period.
+4.  Double the size of the entire plot (clue: you may have to "think outside the box").
+5.  Finally, edit the `YAML` (located the *very top* of this document) so that it shows **your name** instead of `Gavin McNicol`.
+
+```{r exercises, fig.width=5, fig.height=3, message=FALSE}
+emissions %>%
+  filter(territory %in% c("USA", "United Kingdom", "China") &
+           year > 1979) %>%
+  ggplot(mapping = aes(x = year, y = emissions, color = territory)) +
+  geom_point(alpha = 0.4) +
+  geom_smooth(method = "loess", se = FALSE) +
+  labs(
+    title = "Emissions of Carbon Dioxide by Territory",
+    subtitle = "1980 to 2020",
+    y = expression("Emissions (Mt C y"^{-1}*")"),
+    x = "Year",
+    color = "Territory"
+  ) +
+  theme_classic()
+```
+
+*Remember to `Knit` the file when you make a change. This will save your work and create an .html output file.*
+
+## References
+
+1.  Global Carbon Project.
+    (2020).
+    Supplemental data of Global Carbon Budget 2020 (Version 1.0) [Data set].
+    [Global Carbon Project](https://doi.org/10.18160/gcp-2020)
+
+2.  This exercise was modeled after the UN Votes application exercise in [Data Science in a Box](https://datasciencebox.org/index.html).
+
+## Appendix {#appendix}
+
+Below is a list of countries in the dataset:
+
+```{r list-countries, echo=FALSE}
+emissions %>% 
+  dplyr::select(territory) %>% 
+  distinct() %>% 
+  reactable()
+```

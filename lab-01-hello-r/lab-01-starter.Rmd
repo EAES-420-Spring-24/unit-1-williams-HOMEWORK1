@@ -1,0 +1,126 @@
+---
+title: "Lab 01 - Hello R"
+author: "Mia Williams"
+date: "01/17/2024"
+output: 
+  html_document: 
+    fig_height: 7
+---
+
+## Load packages and data
+
+```{r load-packages, message=FALSE}
+library(tidyverse) 
+library(datasauRus)
+datasaurus_dozen <- datasaurus_dozen %>% 
+  rename(shape = dataset)
+```
+
+If you've just finished running the first `load-packages` chunk above, you can navigate back to your Lab 01 instructions now.
+
+## Exercises
+
+### Exercise 1
+
+```{r ?datasaurus_dozen}
+# replace this line with ?datasaurus_dozen
+?datasaurus_dozen
+```
+
+3 columns, 1846 rows
+variables: dataset, x-values, y-values
+
+### Exercise 2
+
+First let's plot the data in the `dino` shape:
+
+```{r plot-dino, fig.height=3, fig.width=6}
+dino_data <- datasaurus_dozen %>%
+  filter(shape == "dino")
+
+ggplot(data = dino_data, mapping = aes(x = x, y = y)) +
+  geom_point()
+```
+
+And next calculate the correlation between `x` and `y` in this dataset:
+
+```{r cor-dino}
+dino_data %>%
+  summarize(r = cor(x, y))
+```
+
+### Exercise 3
+
+I copied and pasted the code from the dinosaur plot earlier and replaced "dino" with "plot-star". I also had to delete some extra text that I determined wasn't necessary through trial and error running (it told me what I didn't need after I ran it). 
+no first person, concise
+```{r plot-star,fig.height=3, fig.width=6}
+star_data <- datasaurus_dozen %>%
+  filter(shape == "star")
+
+ggplot(data = star_data, mapping = aes(x = x, y = y)) +
+  geom_point()
+
+star_data %>%
+  summarize(r = cor(x, y))
+
+```
+
+Between dino and star, the correlation coefficients are NOT the same but they are similar. Dino is -0.065 and star is -0.063. 
+
+```{r cor-star, fig.height=3, fig.width=6}
+star2_data <- datasaurus_dozen %>%
+  filter(shape == "star")
+
+ggplot(data = star2_data, mapping = aes(x = x, y = y)) +
+  geom_point()
+
+```
+
+
+
+### Exercise 4
+
+Add code and narrative below as needed.  -1
+
+Note that two R chunks are given but they are not labeled.  
+
+Use the convention from above to name them appropriately.
+
+```{r plot-circle,fig.height=3, fig.width=6}
+circle_data <- datasaurus_dozen %>%
+  filter(shape == "circle")
+
+ggplot(data = circle_data, mapping = aes(x = x, y = y)) +
+  geom_point()
+
+circle_data %>%
+  summarize(r = cor(x, y))
+
+```
+
+The circle's coeffeicient is -0.068, slightly smaller than dino's. 
+
+```{r}
+
+```
+
+### Exercise 5
+-.5
+```{r}
+ggplot(datasaurus_dozen, aes(x = x, y = y, color = shape))+
+  geom_point()+
+  facet_wrap(~ shape, ncol = 3) +
+  theme(legend.position = "none")
+```
+
+```{r}
+datasaurus_dozen %>%
+  group_by(shape) %>%
+  summarize(r = cor(x, y)) %>%
+  print(13)
+```
+  
+
+**The fastest way to insert a code chunk is to use the keyboard shortcut: command-option-i (on MacOS) or Control-Alt-i (on Windows).** Or you can add R chunks by manually typing out the backticks, curly braces, and the letter `r` or use the Insert chunk button above, green C+.
+
+-1 repo name should be unit-1-williams-mia or unit-1-williams
