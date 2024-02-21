@@ -69,3 +69,4 @@ Comparing the two, I can see that They are both visually difficult to read. The 
 ### Exercise 7
 
 Yes! I think it makes more sense for this specific dataset, though the (Year) could be useful in other datasets. With the two variables in the last graph, the graph right away is more coherent making it the correct graph to use to present one's findings. 
+6 pt
